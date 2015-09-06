@@ -83,6 +83,9 @@
     accountTextField = [[UITextField alloc]initWithFrame:CGRectMake(10, 64, self.view.frame.size.width - 20, 44)];
     accountTextField.layer.borderColor = [UIColor redColor].CGColor;
     accountTextField.font = [UIFont systemFontOfSize:14];
+    accountTextField.autocorrectionType = UITextAutocorrectionTypeNo;//关闭拼写检查
+    accountTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;//首字母小写
+    
     accountTextField.layer.borderWidth = 0.5;
     accountTextField.delegate = self;
     [accountTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
@@ -135,6 +138,14 @@
     
     listTableView.hidden=!iShow;
 }
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    if(textField == accountTextField)
+    {
+        [self setShowList:NO];
+    }
+    return YES;
+}
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
 //    if (range.location > 0 && range.length == 1 && string.length == 0)
@@ -164,22 +175,18 @@
 //    }
 //    return YES;
 
-    passwordString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+//    passwordString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
     //判断text 是否输入过@ 如果输入过则不出现下啦菜单
-    
     NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
     if (textField == accountTextField) {
-        
         //是否包含@
-        
         if ([text containsString:@"@"]) {
             
             [self setShowList:YES];
             
             [tableViewData removeAllObjects];
-            
             //范围
             NSRange range = [text rangeOfString:@"@"];
             
@@ -196,39 +203,22 @@
                 NSString *headText = [text substringWithRange:NSMakeRange(0,range.location+range.length)];
                 
                 for (NSString *str in emailsArray) {
-                    
                     //匹配
-                    
                     if ([str hasPrefix:suffix]) {
                         
-                        
-                        
                         [tableViewData addObject:[NSString stringWithFormat:@"%@%@",headText,str]];
-                        
-                        
-                        
                     }
-                    
                 }
                 
                 if (tableViewData.count<=0) {
-                    
                     [self setShowList:NO];
-                    
                 }
-                
             }
-            
-            
-            
             [listTableView reloadData];
-            
-        }else
-            
+        }
+        else
         {
-            
             [self setShowList:NO];
-            
         }
         
     }
@@ -325,6 +315,11 @@
 {
     NSIndexPath *selectedIndex = [tableView indexPathForSelectedRow];
     [tableView deselectRowAtIndexPath:selectedIndex animated:YES];
+    if(tableViewData != nil && tableViewData.count > 0)
+    {
+        accountTextField.text = [tableViewData objectAtIndex:indexPath.row];
+        [self setShowList:NO];
+    }
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
