@@ -37,6 +37,7 @@
                                                                                   object:nil queue:nil usingBlock:^(NSNotification *note) {
                                                                                       if (weakSelf == note.object && weakSelf.isSecureTextEntry) {
                                                                                           weakSelf.text = @"";
+//                                                                                          weakSelf.text = weakSelf.password;
                                                                                           [weakSelf insertText:weakSelf.password];
                                                                                       }
                                                                                   }];

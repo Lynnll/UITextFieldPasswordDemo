@@ -14,7 +14,6 @@
 		E2B93A2C1B9BDEED001A588B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2B93A2B1B9BDEED001A588B /* Images.xcassets */; };
 		E2B93A2F1B9BDEED001A588B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2B93A2D1B9BDEED001A588B /* LaunchScreen.xib */; };
 		E2B93A3B1B9BDEED001A588B /* UITextFieldPasswordDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B93A3A1B9BDEED001A588B /* UITextFieldPasswordDemoTests.m */; };
-		E2B93A4A1B9BE3A0001A588B /* MyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B93A491B9BE3A0001A588B /* MyTextField.m */; };
 		E2B93A4D1B9C33E3001A588B /* DKTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B93A4C1B9C33E3001A588B /* DKTextField.m */; };
 		E2B93A501B9C47A7001A588B /* EmailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B93A4F1B9C47A7001A588B /* EmailCell.m */; };
 /* End PBXBuildFile section */
@@ -43,8 +42,6 @@
 		E2B93A341B9BDEED001A588B /* UITextFieldPasswordDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITextFieldPasswordDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2B93A391B9BDEED001A588B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2B93A3A1B9BDEED001A588B /* UITextFieldPasswordDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITextFieldPasswordDemoTests.m; sourceTree = "<group>"; };
-		E2B93A481B9BE3A0001A588B /* MyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTextField.h; sourceTree = "<group>"; };
-		E2B93A491B9BE3A0001A588B /* MyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTextField.m; sourceTree = "<group>"; };
 		E2B93A4B1B9C33E3001A588B /* DKTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKTextField.h; sourceTree = "<group>"; };
 		E2B93A4C1B9C33E3001A588B /* DKTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKTextField.m; sourceTree = "<group>"; };
 		E2B93A4E1B9C47A7001A588B /* EmailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailCell.h; sourceTree = "<group>"; };
@@ -94,10 +91,8 @@
 				E2B93A231B9BDEED001A588B /* AppDelegate.m */,
 				E2B93A251B9BDEED001A588B /* ViewController.h */,
 				E2B93A261B9BDEED001A588B /* ViewController.m */,
-				E2B93A481B9BE3A0001A588B /* MyTextField.h */,
 				E2B93A4B1B9C33E3001A588B /* DKTextField.h */,
 				E2B93A4C1B9C33E3001A588B /* DKTextField.m */,
-				E2B93A491B9BE3A0001A588B /* MyTextField.m */,
 				E2B93A4E1B9C47A7001A588B /* EmailCell.h */,
 				E2B93A4F1B9C47A7001A588B /* EmailCell.m */,
 				E2B93A281B9BDEED001A588B /* Main.storyboard */,
@@ -240,7 +235,6 @@
 				E2B93A501B9C47A7001A588B /* EmailCell.m in Sources */,
 				E2B93A241B9BDEED001A588B /* AppDelegate.m in Sources */,
 				E2B93A211B9BDEED001A588B /* main.m in Sources */,
-				E2B93A4A1B9BE3A0001A588B /* MyTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

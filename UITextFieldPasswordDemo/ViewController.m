@@ -20,13 +20,11 @@
     
     BOOL isShowPsd;
     
-    NSString *passwordString;
-    
     UITableView *listTableView;
     
     NSArray *emailsArray;
     
-    BOOL _showList;
+    BOOL isShowList;
     
     NSMutableArray *tableViewData;
 }
@@ -39,9 +37,7 @@
     
     tableViewData = [NSMutableArray array];
     
-    passwordString = @"";
-    
-    _showList = NO;
+    isShowList = NO;
     
     emailsArray = [NSArray arrayWithObjects:@"sohu.com",@"sina.com",@"163.com",@"126.com",@"qq.com", nil];
     
@@ -52,26 +48,14 @@
     [self loadPsdTextField];
     
     [self loadTableView];
-
-
-//    UIButton * showBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    showBtn.frame = CGRectMake(10, 200, 44, 44);
-//    showBtn.backgroundColor = [UIColor clearColor];
-//    [showBtn setTitle:@"显示" forState:UIControlStateNormal];
-//    [showBtn addTarget:self action:@selector(resigClick) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:showBtn];
 }
-//- (void)resigClick
-//{
-////    [psdTextField resignFirstResponder];
-//    NSLog(@"psdtext = %@",psdTextField.text);
-//}
 - (void)loadTableView
 {
     listTableView = [[UITableView alloc]initWithFrame:CGRectMake(10, 108, self.view.frame.size.width - 20, 100) style:UITableViewStyleGrouped];
     listTableView.delegate = self;
     listTableView.hidden = YES;
     listTableView.dataSource = self;
+    listTableView.scrollEnabled = NO;
     listTableView.backgroundColor = [UIColor whiteColor];
     listTableView.separatorColor = [UIColor clearColor];
     listTableView.layer.borderColor = [UIColor colorWithRed:229 / 255.0f green:230 / 255.0f blue:234 / 255.0f alpha:1].CGColor;
@@ -134,7 +118,12 @@
 }
 -(void)setShowList:(BOOL)iShow{
     
-    _showList=iShow;
+    isShowList=iShow;
+    
+    if(isShowList && tableViewData != nil && tableViewData.count > 0)
+    {
+        listTableView.frame = CGRectMake(10, 108, self.view.frame.size.width - 20, 36 * tableViewData.count);
+    }
     
     listTableView.hidden=!iShow;
 }
@@ -148,106 +137,69 @@
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-//    if (range.location > 0 && range.length == 1 && string.length == 0)
-//    {
-//        // Stores cursor position
-//        UITextPosition *beginning = textField.beginningOfDocument;
-//        UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
-//        NSInteger cursorOffset = [textField offsetFromPosition:beginning toPosition:start] + string.length;
-//        
-//        // Save the current text, in case iOS deletes the whole text
-//        NSString *text = textField.text;
-//        
-//        // Trigger deletion
-//        [textField deleteBackward];
-//        
-//        // iOS deleted the entire string
-//        if (textField.text.length != text.length - 1)
-//        {
-//            textField.text = [text stringByReplacingCharactersInRange:range withString:string];
-//            
-//            // Update cursor position
-//            UITextPosition *newCursorPosition = [textField positionFromPosition:textField.beginningOfDocument offset:cursorOffset];
-//            UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
-//            [textField setSelectedTextRange:newSelectedRange];
-//        }
-//        return NO;
-//    }
-//    return YES;
-
-//    passwordString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    
     //判断text 是否输入过@ 如果输入过则不出现下啦菜单
     NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    if (textField == accountTextField) {
-        //是否包含@
-        if ([text containsString:@"@"]) {
-            
-            [self setShowList:YES];
-            
+    if (textField == accountTextField)
+    {
+        if ([text containsString:@"@"])//是否包含@
+        {
             [tableViewData removeAllObjects];
             //范围
             NSRange range = [text rangeOfString:@"@"];
             
-            if ((range.location + range.length) == text.length) {
-                
-                for (NSString *str in emailsArray) {
-                    
+            if ((range.location + range.length) == text.length)
+            {
+                for (NSString *str in emailsArray)
+                {
                     [tableViewData addObject:[NSString stringWithFormat:@"%@%@",text,str]];
                 }
-            }else{
+            }
+            else
+            {
                 
                 NSString *suffix = [text substringWithRange:NSMakeRange(range.location+range.length, text.length-(range.location+range.length))];
                 
                 NSString *headText = [text substringWithRange:NSMakeRange(0,range.location+range.length)];
                 
-                for (NSString *str in emailsArray) {
+                for (NSString *str in emailsArray)
+                {
                     //匹配
-                    if ([str hasPrefix:suffix]) {
-                        
+                    if ([str hasPrefix:suffix])
+                    {
                         [tableViewData addObject:[NSString stringWithFormat:@"%@%@",headText,str]];
                     }
                 }
-                
-                if (tableViewData.count<=0) {
-                    [self setShowList:NO];
-                }
+
             }
+            if (tableViewData.count<=0)
+            {
+                [self setShowList:NO];
+            }
+            else
+            {
+                [self setShowList:YES];
+            }
+            
             [listTableView reloadData];
         }
         else
         {
             [self setShowList:NO];
         }
-        
     }
-    
     return YES;
-}
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    NSLog(@"textFieldDidEndEditing ~~~");
-}
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    NSLog(@"textFieldDidBeginEditing ~~~");
 }
 - (void)buttonClick:(UIButton *)btn
 {
     if(!isShowPsd)
     {
-//        psdTextField.text = @"";
-//        psdTextField.text = passwordString;
-
         [showButton setTitle:@"隐藏" forState:UIControlStateNormal];
         psdTextField.secureTextEntry = NO;
         isShowPsd = YES;
     }
     else
     {
-//        psdTextField.text = passwordString;
-
         [showButton setTitle:@"显示" forState:UIControlStateNormal];
         psdTextField.secureTextEntry = YES;
         isShowPsd = NO;
@@ -297,33 +249,23 @@
     {
         cell.emailLabel.text = [tableViewData objectAtIndex:indexPath.row];
     }
-    if([cell respondsToSelector:@selector(setLayoutMargins:)])
-    {
-        [cell setLayoutMargins:UIEdgeInsetsZero];
-    }
-    if([tableView respondsToSelector:@selector(setLayoutMargins:)])
-    {
-        [tableView setLayoutMargins:UIEdgeInsetsZero];
-    }
-    if([tableView respondsToSelector:@selector(setSeparatorInset:)])
-    {
-        [tableView setSeparatorInset:UIEdgeInsetsZero];
-    }
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSIndexPath *selectedIndex = [tableView indexPathForSelectedRow];
     [tableView deselectRowAtIndexPath:selectedIndex animated:YES];
+    
     if(tableViewData != nil && tableViewData.count > 0)
     {
         accountTextField.text = [tableViewData objectAtIndex:indexPath.row];
+        
         [self setShowList:NO];
     }
 }
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
