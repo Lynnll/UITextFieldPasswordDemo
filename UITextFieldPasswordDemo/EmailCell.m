@@ -20,7 +20,7 @@
         emailLabel.font = [UIFont systemFontOfSize:14];
         emailLabel.frame = CGRectMake(44, 0, frame.size.width - 44, 36);
 //        emailLabel.textColor = [UIColor colorWithRed:255 / 255.0f green:227 / 255.0f blue:249 / 255.0f alpha:1];
-        emailLabel.textColor = [UIColor blackColor];
+        emailLabel.textColor = [UIColor colorWithRed:150 / 255.0f green:150 / 255.0f blue:150 / 255.0f alpha:1];
         [self addSubview:emailLabel];
     }
     return self;

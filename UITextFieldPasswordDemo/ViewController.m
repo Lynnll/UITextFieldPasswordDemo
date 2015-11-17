@@ -27,6 +27,10 @@
     BOOL isShowList;
     
     NSMutableArray *tableViewData;
+    
+    UIView *eyeBgView;
+    
+    UIImageView *eyeImageView;
 }
 @end
 
@@ -41,7 +45,7 @@
     
     emailsArray = [NSArray arrayWithObjects:@"sohu.com",@"sina.com",@"163.com",@"126.com",@"qq.com", nil];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithRed:11 / 255.0f green:150 / 255.0f blue:243 / 255.0f alpha:1];
     
     [self loadAccountTextField];
     
@@ -57,7 +61,7 @@
     listTableView.dataSource = self;
     listTableView.scrollEnabled = NO;
     listTableView.backgroundColor = [UIColor whiteColor];
-    listTableView.separatorColor = [UIColor clearColor];
+    listTableView.separatorColor = [UIColor whiteColor];
     listTableView.layer.borderColor = [UIColor colorWithRed:229 / 255.0f green:230 / 255.0f blue:234 / 255.0f alpha:1].CGColor;
     listTableView.layer.borderWidth = 0.5;
     [self.view addSubview:listTableView];
@@ -65,23 +69,30 @@
 - (void)loadAccountTextField
 {
     accountTextField = [[UITextField alloc]initWithFrame:CGRectMake(10, 64, self.view.frame.size.width - 20, 44)];
-    accountTextField.layer.borderColor = [UIColor redColor].CGColor;
+    accountTextField.layer.borderColor = [UIColor whiteColor].CGColor;
     accountTextField.font = [UIFont systemFontOfSize:14];
+    accountTextField.tintColor = [UIColor whiteColor];
+    accountTextField.textColor = [UIColor whiteColor];
     accountTextField.autocorrectionType = UITextAutocorrectionTypeNo;//关闭拼写检查
+    accountTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    accountTextField.placeholder = @"请输入邮箱";
+    [accountTextField setValue:[UIColor colorWithWhite:1 alpha:0.5] forKeyPath:@"_placeholderLabel.textColor"];
     accountTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;//首字母小写
     
     accountTextField.layer.borderWidth = 0.5;
     accountTextField.delegate = self;
     [accountTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
+    
     accountTextField.secureTextEntry = NO;
     
     UILabel *subAccountLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 44, 44)];
     subAccountLabel.text = @"账号";
     subAccountLabel.font = [UIFont systemFontOfSize:15];
-    subAccountLabel.textColor = [UIColor redColor];
+    subAccountLabel.textColor = [UIColor whiteColor];
     subAccountLabel.textAlignment = NSTextAlignmentCenter;
     accountTextField.leftView = subAccountLabel;
     accountTextField.leftViewMode = UITextFieldViewModeAlways;
+    accountTextField.tag = 100;
     
     [self.view addSubview:accountTextField];
 }
@@ -89,32 +100,54 @@
 {
     UIView *psdBgView = [[UIView alloc]init];
     psdBgView.frame = CGRectMake(10, 118, self.view.frame.size.width - 20, 44);
-    psdBgView.layer.borderColor = [UIColor redColor].CGColor;
+    psdBgView.layer.borderColor = [UIColor whiteColor].CGColor;
     psdBgView.layer.borderWidth = 0.5;
     [self.view addSubview:psdBgView];
     
-    psdTextField = [[DKTextField alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 20 - 44, 44)];
+    psdTextField = [[DKTextField alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 20, 44)];
     psdTextField.secureTextEntry = YES;
+    psdTextField.backgroundColor = [UIColor clearColor];
+    psdTextField.textColor = [UIColor whiteColor];
+    psdTextField.tintColor = [UIColor whiteColor];
     psdTextField.font = [UIFont systemFontOfSize:14];
+    psdTextField.placeholder = @"请输入密码";
+    [psdTextField setValue:[UIColor colorWithWhite:1 alpha:0.5] forKeyPath:@"_placeholderLabel.textColor"];
     [psdTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
+    psdTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;//首字母小写
+    /**
+     *  keyboardType 英文键盘
+     *  autocorrectionType 关闭自动订正功能（在英文键盘下会自动订正为正确的单词）
+     *  设置以上两项，保证明文输入密码时，只能输入字母且不能切换输入法
+     */
+    psdTextField.keyboardType = UIKeyboardTypeASCIICapable;
+    psdTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     psdTextField.delegate = self;
     [psdBgView addSubview:psdTextField];
     
     UILabel *subPsdLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 44, 44)];
     subPsdLabel.text = @"密码";
     subPsdLabel.font = [UIFont systemFontOfSize:15];
-    subPsdLabel.textColor = [UIColor redColor];
+    subPsdLabel.textColor = [UIColor whiteColor];
     subPsdLabel.textAlignment = NSTextAlignmentCenter;
     psdTextField.leftView = subPsdLabel;
     psdTextField.leftViewMode = UITextFieldViewModeAlways;
+    psdTextField.tag = 101;
     
-    isShowPsd = NO;
-    showButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    showButton.frame = CGRectMake(psdBgView.bounds.size.width - 44, 0, 44, 44);
-    showButton.backgroundColor = [UIColor clearColor];
-    [showButton setTitle:@"显示" forState:UIControlStateNormal];
-    [showButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-    [psdBgView addSubview:showButton];
+    eyeBgView = [[UIView alloc]init];
+    eyeBgView.frame = CGRectMake(psdBgView.frame.size.width - 54, 0, 54, 44);
+    eyeBgView.backgroundColor = [UIColor clearColor];
+    eyeBgView.userInteractionEnabled = YES;
+    eyeBgView.hidden = YES;
+    UITapGestureRecognizer *eyeTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showOrHidePassword)];
+    [eyeBgView addGestureRecognizer:eyeTapGesture];
+    
+    eyeImageView = [[UIImageView alloc]init];
+    eyeImageView.frame = CGRectMake(0, -5, 44, 44);//图片不给力，位置没居中。凑合看吧。
+    eyeImageView.image = [UIImage imageNamed:@"register_open_eye.png"];
+    eyeImageView.backgroundColor = [UIColor clearColor];
+    [eyeBgView addSubview:eyeImageView];
+    
+    [psdBgView addSubview:eyeBgView];
 }
 -(void)setShowList:(BOOL)iShow{
     
@@ -135,6 +168,34 @@
     }
     return YES;
 }
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    if(textField.tag == 101)
+    {
+        CGRect psdTextFiledFrame = psdTextField.frame;
+        psdTextFiledFrame.size.width = (self.view.frame.size.width - 20 - 54);
+        psdTextField.frame = psdTextFiledFrame;
+        eyeBgView.hidden = NO;
+    }
+    return YES;
+}
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    if(textField.tag == 100)
+    {
+        [self setShowList:NO];
+    }
+    else if(textField.tag == 101)
+    {
+        CGRect psdTextFiledFrame = psdTextField.frame;
+        psdTextFiledFrame.size.width = (self.view.frame.size.width - 50);
+        psdTextField.frame = psdTextFiledFrame;
+        
+        eyeBgView.hidden = YES;
+    }
+    return YES;
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     //判断text 是否输入过@ 如果输入过则不出现下啦菜单
@@ -205,6 +266,21 @@
         isShowPsd = NO;
     }
 }
+- (void)showOrHidePassword
+{
+    if(!isShowPsd)
+    {
+        [eyeImageView setImage:[UIImage imageNamed:@"register_open_eye.png"]];
+        psdTextField.secureTextEntry = NO;
+        isShowPsd = YES;
+    }
+    else
+    {
+        [eyeImageView setImage:[UIImage imageNamed:@"register_close_eye.png"]];
+        psdTextField.secureTextEntry = YES;
+        isShowPsd = NO;
+    }
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -237,17 +313,20 @@
     {
         cell = [[EmailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName];
     }
-    if(indexPath.row %2 == 0)
-    {
-        cell.backgroundColor = [UIColor colorWithRed:229 / 255.0f green:230 / 255.0f blue:234 / 255.0f alpha:1];
-    }
-    else
-    {
-        cell.backgroundColor = [UIColor whiteColor];
-    }
+    cell.backgroundColor = [UIColor whiteColor];
+
     if(tableViewData != nil && tableViewData.count > 0)
     {
         cell.emailLabel.text = [tableViewData objectAtIndex:indexPath.row];
+    }
+    if([cell respondsToSelector:@selector(setLayoutMargins:)]){
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if([tableView respondsToSelector:@selector(setLayoutMargins:)]){
+        [tableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if([tableView respondsToSelector:@selector(setSeparatorInset:)]){
+        [tableView setSeparatorInset:UIEdgeInsetsZero];
     }
     return cell;
 }
