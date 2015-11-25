@@ -22,13 +22,17 @@
 //        emailLabel.textColor = [UIColor colorWithRed:255 / 255.0f green:227 / 255.0f blue:249 / 255.0f alpha:1];
         emailLabel.textColor = [UIColor colorWithRed:150 / 255.0f green:150 / 255.0f blue:150 / 255.0f alpha:1];
         [self addSubview:emailLabel];
+        
+//        [self awakeFromNib];
     }
     return self;
 }
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-}
+//- (void)layoutSubviews
+//{
+//    [super layoutSubviews];
+//    
+//    NSLog(@"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];

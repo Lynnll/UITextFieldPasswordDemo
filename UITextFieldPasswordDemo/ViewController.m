@@ -195,15 +195,14 @@
     }
     return YES;
 }
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     //判断text 是否输入过@ 如果输入过则不出现下啦菜单
     NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    if (textField == accountTextField)
+    if (textField.tag == 100)
     {
-        if ([text containsString:@"@"])//是否包含@
+        if ([text rangeOfString:@"@"].location != NSNotFound)//是否包含@ containsString iOS8可用
         {
             [tableViewData removeAllObjects];
             //范围
@@ -221,7 +220,11 @@
                 
                 NSString *suffix = [text substringWithRange:NSMakeRange(range.location+range.length, text.length-(range.location+range.length))];
                 
+                NSLog(@"suffx = %@",suffix);
+                
                 NSString *headText = [text substringWithRange:NSMakeRange(0,range.location+range.length)];
+                
+                NSLog(@"headText = %@",headText);
                 
                 for (NSString *str in emailsArray)
                 {

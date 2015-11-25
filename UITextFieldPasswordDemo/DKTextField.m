@@ -8,12 +8,10 @@
 
 #import "DKTextField.h"
 
-#import "DKTextField.h"
-
 @interface DKTextField ()
 @property (nonatomic, copy) NSString *password;
-@property (nonatomic, weak) id beginEditingObserver;
-@property (nonatomic, weak) id endEditingObserver;
+//@property (nonatomic, weak) id beginEditingObserver;
+//@property (nonatomic, weak) id endEditingObserver;
 @end
 
 @implementation DKTextField
@@ -22,31 +20,29 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self awakeFromNib];
+//        [self awakeFromNib];
+        self.password = @"";
+        [self resigterNotification];
     }
     return self;
 }
-
--(void)awakeFromNib{
-    [super awakeFromNib];
-    self.password = @"";
-    
-    __weak DKTextField *weakSelf = self;
-    
-    self.beginEditingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidBeginEditingNotification
-                                                                                  object:nil queue:nil usingBlock:^(NSNotification *note) {
-                                                                                      if (weakSelf == note.object && weakSelf.isSecureTextEntry) {
-                                                                                          weakSelf.text = @"";
-//                                                                                          weakSelf.text = weakSelf.password;
-                                                                                          [weakSelf insertText:weakSelf.password];
-                                                                                      }
-                                                                                  }];
-    self.endEditingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidEndEditingNotification
-                                                                                object:nil queue:nil usingBlock:^(NSNotification *note) {
-                                                                                    if (weakSelf == note.object) {
-                                                                                        weakSelf.password = weakSelf.text;
-                                                                                    }
-                                                                                }];
+- (void)resigterNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidBeginEditing) name:UITextFieldTextDidBeginEditingNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidEndEditing) name:UITextFieldTextDidEndEditingNotification object:self];
+}
+- (void)textFieldDidBeginEditing
+{
+    if(self.secureTextEntry)
+    {
+        self.text = @"";
+        
+        [self insertText:self.password];
+    }
+}
+- (void)textFieldDidEndEditing
+{
+    self.password = self.text;
 }
 - (void)setSecureTextEntry:(BOOL)secureTextEntry
 {
@@ -58,8 +54,34 @@
     }
 }
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self.beginEditingObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:self.endEditingObserver];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self.beginEditingObserver];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self.endEditingObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:UITextFieldTextDidBeginEditingNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:UITextFieldTextDidEndEditingNotification];
 }
-
+//-(void)awakeFromNib
+//{
+//    [super awakeFromNib];
+//    self.password = @"";
+//    
+//    __weak DKTextField *weakSelf = self;
+//    
+//    self.beginEditingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidBeginEditingNotification
+//                                                                                  object:nil queue:nil usingBlock:^(NSNotification *notify) {
+//                                                                                      if (weakSelf == notify.object && weakSelf.isSecureTextEntry) {
+//                                                                                          NSLog(@"did begin editing weakSelf.password = %@",weakSelf.password);
+//                                                                                          
+//                                                                                          weakSelf.text = @"";
+//                                                                                          [weakSelf insertText:weakSelf.password];
+//                                                                                      }
+//                                                                                  }];
+//    self.endEditingObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidEndEditingNotification
+//                                                                                object:nil queue:nil usingBlock:^(NSNotification *notify) {
+//                                                                                    if (weakSelf == notify.object) {
+//                                                                                        
+//                                                                                        NSLog(@"did end editing weakSelf.text = %@",weakSelf.text);
+//                                                                                        weakSelf.password = weakSelf.text;
+//                                                                                    }
+//                                                                                }];
+//}
 @end
